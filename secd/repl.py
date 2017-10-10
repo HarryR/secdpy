@@ -15,9 +15,10 @@ def repl():
 		parsed = parse(line)
 		code = codegen(parsed, [], ['stop'])
 		print("@", code)
-		result = secd_eval(code).s.pop()
 
+		result = secd_eval(code).s.pop()
 		print("=", result)
+		print("")
 
 if __name__ == "__main__":
 	repl()
