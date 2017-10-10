@@ -1,7 +1,14 @@
 PYTHON ?= python
+SECD = $(PYTHON) -msecd
 
-all: test
+all: test repl
 
 test:
-	$(PYTHON) test.py tests/*.lsp | $(PYTHON) test.py | $(PYTHON) test.py
+	$(SECD).test tests/*.lsp | $(SECD).test | $(SECD).test
+
+repl:
+	$(SECD).repl
+
+clean:
+	find . -name '*.pyc' | xargs rm -f
 
