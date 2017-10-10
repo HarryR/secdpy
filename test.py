@@ -1,7 +1,8 @@
 from __future__ import print_function
 import sys
+import ast
 from secd import secd_eval
-from codegen import codegen, parse
+from codegen import codegen, parse, unparse
 
 
 def test_harness(handle):
@@ -14,34 +15,48 @@ def test_harness(handle):
 	"""
 	state = None
 	result = None
+	code = None
 	for line in handle:
 		line = line.strip()
 		if not line or line[0] == '#':
+			if len(line):
+				print(line)
 			continue
 		elif line == '!':
 			print("!")
 			state = None
-			continue
 		elif line[0] == '>':
 			parsed = parse(line[1:].strip())
-			print('>', parsed)
+			print('>', unparse(parsed))
 			code = codegen(parsed, [], ['stop'])
 			print("@", code)
-			state = secd_eval(code, state)
+			state = secd_eval(code, state=state)
 			result = state.s[-1]
 			print("=", result)
-			continue
+			print("")
+		elif line[0] == '@':
+			expected = ast.literal_eval(line[1:].strip())
+			if code != expected:
+				print("#!! Expected:", expected)
+				print("#       Code:", code)
+				print("")
 		elif line[0] == '=':
 			expected = line[1:].strip()
 			if str(result) != expected:
-				print("!!! Expected:", expected)
+				print("#!! Expected:", expected)
 				print("")
+		else:
+			print("#!! Unexpected:", line)
+			print("")
 	
 
 def main(args):
-	for filename in args:
-		with open(filename, 'r') as handle:
-			test_harness(handle)
+	if len(args):
+		for filename in args:
+			with open(filename, 'r') as handle:
+				test_harness(handle)
+	else:
+		test_harness(sys.stdin)
 
 
 if __name__ == "__main__":

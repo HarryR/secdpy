@@ -10,14 +10,11 @@ while True:
 		line = raw_input('> ')
 	except EOFError:
 		break
-	print("Line:", line)
 
 	parsed = parse(line)
-	print("Parsed:", parsed)
-
 	code = codegen(parsed, [], ['stop'])
-	print("Code:", code)
-
+	print("@", code)
 	result = secd_eval(code).s.pop()
+
 	print("=", result)
 

@@ -9,6 +9,11 @@ def parse(program):
     tokens = lex(program)
     return buildast(tokens)
 
+def unparse(program):
+	if isinstance(program, list):
+		return '(' + ' '.join([unparse(X) for X in program]) + ')'
+	return str(program)
+
 def buildast(tokens):
     token = tokens.pop(0)
     if token == '(':

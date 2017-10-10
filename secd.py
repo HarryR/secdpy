@@ -1,6 +1,8 @@
+from __future__ import print_function
 import sys
 import ast
 import operator
+import copy
 from collections import namedtuple 
 
 State = namedtuple('State', ('s', 'e', 'c', 'd'))
@@ -12,6 +14,7 @@ COMMANDS = {
 	'ADD': (APPLY, 2, operator.add),
 	'MUL': (APPLY, 2, operator.mul),
 	'SUB': (APPLY, 2, operator.sub),
+	'MOD': (APPLY, 2, operator.mod),
 	'DIV': (APPLY, 2, operator.div),
 	'XOR': (APPLY, 2, operator.xor),
 	'EQ': (PEEK, 2, operator.eq),
@@ -22,16 +25,21 @@ COMMANDS = {
 	'CONS': (APPLY, 2, lambda car, cdr: [cdr.append(car), cdr][1]),
 	'CAR': (APPLY, 1, lambda x: x.pop()),
 	'CDR': (APPLY, 1, lambda x: [x.pop(), x][1]),
-	'NIL': (lambda _: list(),),
+	'NIL': (lambda _: [],),
 	'ATOM': (PEEK, 1, lambda x: x == []),
 	'LDC': (lambda S: S.c.pop(),),  # pushes constant argument onto stack
 	'LDF': (lambda (s, e, c, d): [e[:], c.pop()],)
 }
 
-def secd_eval(code, stack=None):
+def secd_eval(code, state=None, stack=None):
+	code = copy.deepcopy(code)
 	if stack is None:
 		stack = []
-	state, running = State(stack, [], code, []), True
+	if state is None:
+		state = State(stack, [], code, [])
+	else:
+		state = State(state.s, state.e, code, state.d)
+	running = True
 	while running:
 		state, running = secd_step(state)
 	return state
@@ -40,10 +48,18 @@ def secd_step(state):
 	s, e, c, d = state
 	stop = False
 	op = c.pop().upper()
+	#print("#")
+	#print("#  :", op)
 	if op in COMMANDS:
 		cmd = COMMANDS[op]
-		retval = cmd[0](*[state] + list(cmd[1:]))
+		newstate = State(s, e, c, d)
+		args = [newstate] + list(cmd[1:])
+		retval = cmd[0](*args)
 		if retval is not None:
+			#print("# S=", s)
+			#print("# E=", e)
+			#print("# C=", c)
+			#print("# D=", d)
 			s.append(retval)
 	elif op == 'STOP':
 		stop = True
