@@ -28,7 +28,9 @@ COMMANDS = {
 	'LDF': (lambda (s, e, c, d): [e[:], c.pop()],)
 }
 
-def secd_eval(code, stack=[]):
+def secd_eval(code, stack=None):
+	if stack is None:
+		stack = []
 	state, running = State(stack, [], code, []), True
 	while running:
 		state, running = secd_step(state)
