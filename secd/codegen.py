@@ -168,7 +168,7 @@ def genBuiltin(args,names,code):
         return genBuiltin(args[1:], names, codegen(args[0],names,code))
 
 def genLambda(body,names,code):
-    code.append(codegen(body,names,['rtn']))
+    code.append(codegen(body,names,['ret']))
     code.append('ldf')
     # print("generated lambda:",code)
     return code

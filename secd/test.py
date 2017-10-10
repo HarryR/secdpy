@@ -1,8 +1,8 @@
 from __future__ import print_function
 import sys
 import ast
-from secd import secd_eval
-from codegen import codegen, parse, unparse
+from .vm import RUN
+from .codegen import codegen, parse, unparse
 
 
 def test_harness(handle):
@@ -30,7 +30,7 @@ def test_harness(handle):
 			print('>', unparse(parsed))
 			code = codegen(parsed, [], ['stop'])
 			print("@", code)
-			state = secd_eval(code, state=state)
+			state = RUN(code, state=state)
 			result = state.s[-1]
 			print("=", result)
 			print("")

@@ -1,6 +1,6 @@
 from __future__ import print_function
 from .codegen import parse, codegen
-from .vm import secd_eval
+from .vm import RUN
 import sys
 
 # read eval print loop
@@ -16,7 +16,7 @@ def repl():
 		code = codegen(parsed, [], ['stop'])
 		print("@", code)
 
-		result = secd_eval(code).s.pop()
+		result = RUN(code).s.pop()
 		print("=", result)
 		print("")
 
