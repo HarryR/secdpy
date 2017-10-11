@@ -1,6 +1,6 @@
 # secdpy
 
-SECD machine and Lispkit Lisp compiler, in Python. Based on the final project by [Willem Yarbrough](https://github.com/yarbroughw/secdpy).
+SECD machine and Lispkit Lisp compiler, in Python. Based on the final project by [Willem Yarbrough](https://github.com/yarbroughw/secdpy). It aims to be an easy to understand functional implementation of the SECD virtual machine, with a LispKit compatible compiler.
 
 ## vm.py
 
@@ -29,6 +29,14 @@ s = d.pop() + [retval]   # d[-1] + [s[-1]]
 e = d.pop()              # d[-2]
 c = d.pop()              # d[-3]
 d = d                    # d[:-3]
+```
+
+Python functions can be used with the wrappers `APPLY` and `PEEK` to create a state transform which accepts N arguments, applies the function then and pushes the result onto the stack, for example:
+
+```python
+ADD = APPLY(2, operator.add)
+EQ = PEEK(2, operator.peek)
+CHR = APPLY(1, chr)
 ```
 
 ### opcodes
