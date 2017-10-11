@@ -1,6 +1,8 @@
 # secdpy
 
-SECD machine and Lispkit Lisp compiler, in Python. Based on the final project by [Willem Yarbrough](https://github.com/yarbroughw/secdpy). It aims to be an easy to understand functional implementation of the SECD virtual machine, with a LispKit compatible compiler.
+**WARNING: this is a work-in-progress, there are still some oddities and incompatibilities with existing LispKit compiled code**
+
+SECD machine and Lispkit Lisp compiler, in Python. Based on the project by [Willem Yarbrough](https://github.com/yarbroughw/secdpy). It aims to be an easy to understand functional implementation of the SECD virtual machine, with a LispKit compatible compiler and Python friendly integrations.
 
 ## repl.py
 
@@ -81,20 +83,53 @@ EQ = PEEK(2, operator.peek)   # don't remove arguments from stack
 CHR = APPLY(1, chr)
 ```
 
-### opcodes
+# Lisp Syntax
+
+The Lisp syntax aims to be SECD and LispKit compatible, it should be able to run code from textbooks as great care is being taken to preserve compatibility with the reference materials.
+
+```lisp
+(LETREC SUMFOLD
+	(SUMFOLD LAMBDA (Z) (FOLDRIGHT ADDTHEM (QUOTE 1) Z))
+	(ADDTHEM LAMBDA (X Y) (ADD X Y))
+	(FOLDRIGHT LAMBDA (FUN B XS)
+		(IF (EQ XS (QUOTE NIL)) B
+			(FUN (CAR XS) (FOLDRIGHT FUN B (CDR XS))))))
+```
+
+## Commands
+
+ * `if`
+ * `null`
+ * `nil`
+ * `lambda`
+ * `let`
+ * `letrec`
+ * `list`
+ 
+## Operators
+
+ * `+ - * / ^`
+ * `car`, `cdr`
+ * `zero`
+ * `atom`
+ * `eq`
+ * `leq`
+
+# Opcodes / Instructions
 
 ## control
 
- * `ldc A` pushes a constant argument onto the stack
- * `ldf A` load function, takes on argument representing a function, pushes a closure onto stack
+ * `stop` halt execution
  * `ap F A` pops Function and Arguments from stack, saves then replaces current state. 
+ * `rap` like AP, but allows for recursion
+ * `sel X A B` runs `A if X else B` 
  * `join` returns after a `sel`
  * `ret A` restores state from `C`, adds `A` to stack
- * `sel X A B` runs `A if X else `B` 
- * `rap` like AP, but allows for recursion
  
 ## structure
 
+ * `ldc A` pushes a constant argument onto the stack
+ * `ldf A` load function, takes on argument representing a function, pushes a closure onto stack
  * `dum` pushes an empty list onto the stack
  * `cons A B` creates a pair from two arguments
  * `car A` first of pair
@@ -121,9 +156,13 @@ arguments aren't removed from stack for comparison operations
  * `le A B` less than equal
  * `ge A B` greater than equal
 
-# SECD resources
+# References
 
+ * [The LispKit System, by Peter Henderson](http://www.cs.ncl.ac.uk/publications/trs/papers/129.pdf)
+ * [LispKit C and Lisp Source, compiled SECD output](http://www.cs.uml.edu/~giam/91.531/Code/lispkit/LKIT-2/)
  * [SECD virtual machine](https://webdocs.cs.ualberta.ca/~you/courses/325/Mynotes/Fun/SECD-slides.html)
- * https://github.com/zachallaun/secd
- * https://en.wikipedia.org/wiki/SECD_machine
  * The LispKit Manual, [Volume 1](https://www.cs.ox.ac.uk/files/3299/PRG32%20vol%201.pdf) [Volume 2](http://www.ocs.net/~jfurman/lispkit/prgversion/PRG32_vol_2.pdf) (PDF)
+
+# License
+
+MIT licensed, see [`LICENSE`](LICENSE) file.
