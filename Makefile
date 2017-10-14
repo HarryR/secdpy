@@ -4,6 +4,9 @@ SECD = $(PYTHON) -msecd
 all: test repl
 
 test:
+	$(SECD).test tests/*.lsp 
+
+testtest:
 	$(SECD).test tests/*.lsp | $(SECD).test | $(SECD).test
 
 repl:

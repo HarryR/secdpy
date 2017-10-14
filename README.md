@@ -48,13 +48,13 @@ each line in the unit test file stats with a single letter command:
 
 ## vm.py
 
-The virtual machine has been re-written in a purely functional style that transforms the current state into a new result state, for example:
+The virtual machine has been re-written in a purely functional style that transforms the current state into a new result state, for example (note that `[]` is used instead of None):
 
 ```python
 State = namedtuple('State', ('s', 'e', 'c', 'd'))
 NOP = lambda S: S
-NIL = lambda (s, e, c, d): State(s + [None], e, c, d)
-NIL(NOP(State([],[],[],[]))) == State([None], [], [], [])
+NIL = lambda (s, e, c, d): State([[]] + s, e, c, d)
+NIL(NOP(State([],[],[],[]))) == State([[]], [], [], [])
 ```
 
 a more complicated example:
@@ -62,7 +62,8 @@ a more complicated example:
 ```python
 # pops one value from the stack, restores S, E and C from the dump
 # then pushes return value onto the now current stack
-RET = lambda (s, e, c, d): State(d[-1] + [s[-1]], d[-2], d[-3], d[:-3])
+#  (v) e" (RTN) (s e c . d) -> (v . s) e c d
+RET = lambda (s, e, c, d): State([s[0]] + d[0], d[1], d[2], d[3:])
 ```
 
 can be translated from the equivalent procedural code:

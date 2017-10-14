@@ -28,17 +28,17 @@ def test_harness(handle):
 		elif line[0] == '>':
 			parsed = parse(line[1:].strip())
 			print('>', unparse(parsed))
-			code = codegen(parsed, [], ['stop'])
-			print("@", code)
+			code = codegen(parsed) + ['STOP']
+			print("@", unparse(code))
 			state = RUN(code, state=state)
-			result = state.s[-1]
+			result = state.s.pop(0)
 			print("=", result)
 			print("")
 		elif line[0] == '@':
-			expected = ast.literal_eval(line[1:].strip())
-			if code != expected:
+			expected = line[1:].strip()
+			if unparse(code) != expected:
 				print("#!! Expected:", expected)
-				print("#       Code:", code)
+				print("#       Code:", unparse(code))
 				print("")
 		elif line[0] == '=':
 			expected = line[1:].strip()
