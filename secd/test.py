@@ -3,7 +3,6 @@ import sys
 from .vm import RUN
 from .codegen import codegen, parse, unparse
 
-
 def test_harness(handle):
     """
     Executes statements from a 'test file'
@@ -56,6 +55,6 @@ def main(args):
     else:
         test_harness(sys.stdin)
 
-
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
+

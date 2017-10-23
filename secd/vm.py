@@ -8,8 +8,8 @@ from .sexpr import *
 
 State = namedtuple('State', ('s', 'e', 'c', 'd'))
 
-APPLY = lambda N, F: lambda (s, e, c, d): State([F(*s[:N][::-1])] + s[N:], e, c[1:], d)
-PEEK = lambda N, F: lambda (s, e, c, d): State([F(*s[:N][::-1])] + s, e, c[1:], d)
+APPLY = lambda N, F: lambda (s, e, c, d): State([F(*s[:N])] + s[N:], e, c[1:], d)
+PEEK = lambda N, F: lambda (s, e, c, d): State([F(*s[:N])] + s, e, c[1:], d)
 
 COMMANDS = dict(
     NOP=(0, lambda S: S),

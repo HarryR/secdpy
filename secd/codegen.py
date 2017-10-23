@@ -18,7 +18,7 @@ def genatom(expr, names):
     elif isnum(expr) or isstr(expr):
         return ['LDC', expr]
     elif issym(expr):
-        return ['LD', index(expr.name, names)]    
+        return ['LD', index(expr.name, names)]
     raise SyntaxError("Cannot codegen atom: " + str(expr))
 
 def peekargs(n, expr):
@@ -50,7 +50,9 @@ MACROS = {
 COMMAND_ALIASES = {
     '+': 'ADD', '-': 'SUB', '/': 'DIV', '*': 'MUL',
     '^': 'XOR', '&': 'AND', '|': 'OR', 'EQ?': 'EQ',
-    'ATOM?': 'ATOM', 'NIL?': 'NIL'
+    'ATOM?': 'ATOM', 'NIL?': 'NIL', '#T': 'T', '#F': 'F',
+    'NULL?': 'NIL', 'NULL': 'NIL', '<=': 'LE', ">=": 'GE',
+    '<': 'LT', '>': 'GT',
 }
 
 def codegen(expr, names=None):
@@ -81,3 +83,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
